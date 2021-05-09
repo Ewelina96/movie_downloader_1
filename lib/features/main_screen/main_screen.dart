@@ -30,19 +30,14 @@ class MainScreen extends StatelessWidget {
           } else if (state is LoadedState) {
             final movies = state.movies;
 
-            print(movies.length);
-
             return ListView.builder(
-              itemCount: movies.length,
+              itemCount: movies!.length,
               itemBuilder: (context, index) => Card(
                 child: ListTile(
                   title: Text(
                     movies[index].title,
                     style: context.bodyText1Style(),
                   ),
-                  //leading: CircleAvatar(
-                  // backgroundImage: NetworkImage(movies[index].urlImage),
-                  //  ),
                 ),
               ),
             );

@@ -13,9 +13,9 @@ class LoadingState extends MoviesState {
 class LoadedState extends MoviesState {
   LoadedState(this.movies);
 
-  final List<MovieModel> movies;
+  final List<MovieModel>? movies;
 
-  List<Object> get props => [movies];
+  List<Object> get props => [movies!];
 }
 
 class ErrorState extends MoviesState {

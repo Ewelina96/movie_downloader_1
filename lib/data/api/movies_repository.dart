@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:hive/hive.dart';
+import 'package:movie_downloader_1/data/models/movies_hive.dart';
 import 'package:movie_downloader_1/data/models/movies_response_model.dart';
 
 class MoviesRepository {
@@ -15,12 +17,26 @@ class MoviesRepository {
   }
 
   static final _baseUrl = 'https://yts.mx/api/v2';
+  static final _hiveKey = 'movies_list';
 
   Future<MoviesResponse> getMovies() async {
     try {
-      final response = await _dio.get('$_baseUrl/list_movies.json');
-      print(response.data);
-      return MoviesResponse.success(response.data['data']);
+      final box = await Hive.openBox('repositoryBox');
+      final _currentTime = DateTime.now();
+      final MoviesBase? _moviesData = await box.get(_hiveKey);
+      final _difference = _moviesData == null
+          ? 0
+          : _currentTime.difference(_moviesData.lastFetchDate).inDays;
+      if (_moviesData == null || _difference > 10) {
+        final response = await _dio.get('$_baseUrl/list_movies.json');
+        // try {
+        // zapisywanie do hive
+        final successResponse = MoviesResponse.success(response.data['data']);
+        box.put(_hiveKey, successResponse.data);
+        return successResponse;
+      } else {
+        return MoviesResponse(data: _moviesData);
+      }
     } catch (e) {
       return MoviesResponse.error(e.toString());
     }
