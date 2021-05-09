@@ -15,7 +15,6 @@ class MoviesCubit extends Cubit<MoviesState> {
       final moviesResponse = await moviesRepository.getMovies();
       emit(LoadedState(moviesResponse.data!.movies));
     } catch (e) {
-      print(e);
       emit(ErrorState());
     }
   }

@@ -2,7 +2,6 @@ import 'package:movie_downloader_1/data/models/movies_hive.dart';
 
 class MoviesResponse {
   factory MoviesResponse.success(Map<String, dynamic> map) {
-    print('MAP $map');
     return MoviesResponse(data: MoviesBase.fromJson(map));
   }
 

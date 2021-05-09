@@ -1,29 +1,45 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:movie_downloader_1/main.dart';
+import 'package:mockito/mockito.dart';
+import 'package:movie_downloader_1/data/api/movies_repository.dart';
+import 'package:movie_downloader_1/data/models/movie_model.dart';
+import 'package:movie_downloader_1/data/models/movies_hive.dart';
+import 'package:movie_downloader_1/data/models/movies_response_model.dart';
+import 'package:movie_downloader_1/features/main_screen/cubit/cubit.dart';
+import 'package:movie_downloader_1/features/main_screen/cubit/moviesState.dart';
+
+class MockRepository extends Mock implements MoviesRepository {}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(App());
+  late MockRepository movieRepository;
+  late MoviesCubit moviesCubit;
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  final movies = [
+    MovieModel(title: 'Movie 1'),
+    MovieModel(title: 'Movie 2'),
+  ].toList();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  final moviesResponse = MoviesResponse(data: MoviesBase(movies));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  setUp(() {
+    movieRepository = MockRepository();
+    when(movieRepository.getMovies())
+        .thenAnswer((_) => Future.value(moviesResponse));
+  });
+
+  test('Emits movies when repository answer properly', () async {
+    moviesCubit = MoviesCubit(moviesRepository: movieRepository);
+
+    await expectLater(
+      moviesCubit.stream,
+      emits(
+        LoadingState(),
+      ),
+    );
+    await expectLater(
+      moviesCubit.stream,
+      emits(
+        LoadedState(movies),
+      ),
+    );
   });
 }

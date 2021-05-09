@@ -29,8 +29,7 @@ class MoviesRepository {
           : _currentTime.difference(_moviesData.lastFetchDate).inDays;
       if (_moviesData == null || _difference > 10) {
         final response = await _dio.get('$_baseUrl/list_movies.json');
-        // try {
-        // zapisywanie do hive
+
         final successResponse = MoviesResponse.success(response.data['data']);
         box.put(_hiveKey, successResponse.data);
         return successResponse;
