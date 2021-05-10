@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_downloader_1/components/base_app_bar.dart';
-import 'package:movie_downloader_1/features/main_screen/cubit/cubit.dart';
-import 'package:movie_downloader_1/features/main_screen/cubit/moviesState.dart';
+import 'package:movie_downloader_1/features/movies_screen/cubit/cubit.dart';
+import 'package:movie_downloader_1/features/movies_screen/cubit/moviesState.dart';
 import 'package:movie_downloader_1/values/app_theme.dart';
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({Key? key}) : super(key: key);
+class MoviesScreen extends StatelessWidget {
+  const MoviesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +16,11 @@ class MainScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is LoadingState) {
             return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.red,
-              ),
+              child: CircularProgressIndicator(),
             );
           } else if (state is ErrorState) {
             return Center(
-              child: Icon(
-                Icons.close,
-                color: Colors.red,
-              ),
+              child: Icon(Icons.close),
             );
           } else if (state is LoadedState) {
             final movies = state.movies;
