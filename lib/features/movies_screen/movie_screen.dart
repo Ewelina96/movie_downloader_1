@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_downloader_1/components/base_app_bar.dart';
 import 'package:movie_downloader_1/features/movies_screen/cubit/cubit.dart';
-import 'package:movie_downloader_1/features/movies_screen/cubit/moviesState.dart';
+import 'package:movie_downloader_1/features/movies_screen/cubit/movies_state.dart';
 import 'package:movie_downloader_1/values/app_theme.dart';
 
 class MoviesScreen extends StatelessWidget {
@@ -26,7 +26,7 @@ class MoviesScreen extends StatelessWidget {
             final movies = state.movies;
 
             return ListView.builder(
-              itemCount: movies!.length,
+              itemCount: movies.length,
               itemBuilder: (context, index) => Card(
                 child: ListTile(
                   title: Text(
